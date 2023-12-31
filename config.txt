@@ -1,2 +1,2 @@
-MODIFIERS=1|4  ; 1 corresponds to MOD_ALT, 2 corresponds to MOD_CONTROL
+MODIFIERS=1|2  ; 1 corresponds to MOD_ALT, 2 corresponds to MOD_CONTROL
 KEY=70             ; 70 corresponds to 'F'
