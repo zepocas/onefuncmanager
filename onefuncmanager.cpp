@@ -2,19 +2,20 @@
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
+#include <vector>
 
 const UINT MY_HOTKEY_ID = 1;
 RECT savedRect = {0}; // Declare savedRect globally
 
 // Structure to hold hotkey configuration
 struct HotkeyConfig {
-    int modifiers;
+    std::vector<int> modifiers;
     int key;
 };
 
 // Function to read hotkey configuration from a file
 HotkeyConfig ReadHotkeyConfig(const std::string& filename) {
-    HotkeyConfig config = {0, 0}; // Default values
+    HotkeyConfig config; // Default values
 
     std::ifstream configFile(filename);
     if (configFile.is_open()) {
@@ -24,22 +25,25 @@ HotkeyConfig ReadHotkeyConfig(const std::string& filename) {
             std::string key, value;
             if (std::getline(iss, key, '=') && std::getline(iss, value, ';')) {
                 if (key == "MODIFIERS") {
-                    // Split the value at "|" and convert each part separately
                     std::istringstream modifiersStream(value);
                     std::string modifier;
                     while (std::getline(modifiersStream, modifier, '|')) {
-                        config.modifiers |= std::stoi(modifier);
+                        config.modifiers.push_back(std::stoi(modifier));
                     }
                 } else if (key == "KEY") {
                     config.key = std::stoi(value);
                 }
+
             }
         }
         configFile.close();
     }
-    std::printf("%d - %d",config.key, config.modifiers);
+    
+    // const int NEW_HOTKEY_MODIFIERS = MOD_CONTROL | MOD_ALT;
+    // std::printf("desired - %d\n",NEW_HOTKEY_MODIFIERS);
     return config;
 }
+
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -101,7 +105,6 @@ int main() {
     // Read hotkey configuration from the file
     HotkeyConfig hotkeyConfig = ReadHotkeyConfig("config.txt");
     
-
     // Register the window class
     WNDCLASSW wc = {};
     wc.lpfnWndProc = WindowProc;
@@ -113,7 +116,14 @@ int main() {
     HWND hwnd = CreateWindowExW(0, L"SimpleWindowManager", L"Simple Window Manager", 0, 0, 0, 0, 0, 0, 0, wc.hInstance, 0);
 
     // Register the hotkey with the configuration values
-    RegisterHotKey(hwnd, MY_HOTKEY_ID, hotkeyConfig.modifiers, hotkeyConfig.key);
+
+    int combinedModifiers = 0;
+    for (int modifier : hotkeyConfig.modifiers) {
+        combinedModifiers |= modifier;
+    }
+
+    // std::printf("combined modifiers %d\n", combinedModifiers);
+    RegisterHotKey(hwnd, MY_HOTKEY_ID, combinedModifiers, hotkeyConfig.key);
 
     // Message loop
     MSG msg = {};
