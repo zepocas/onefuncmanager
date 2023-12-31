@@ -14,4 +14,4 @@ endif()
 
 add_executable(onefuncmanager
         onefuncmanager.cpp
-        ${ICON_FILE})
+        resources.rc)

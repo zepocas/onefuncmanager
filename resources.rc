@@ -1,0 +1,3 @@
+#include "winuser.h"
+#define IDR_MYICON 101
+IDR_MYICON ICON "icon.ico"
