@@ -1,0 +1,2 @@
+MODIFIERS=164|512   ; 164 corresponds to Alt, 512 corresponds to Ctrl
+KEY=70             ; 70 corresponds to 'F'
