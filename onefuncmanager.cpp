@@ -136,7 +136,9 @@ void CreateSystemTrayIcon(HWND hwnd) {
     nid.uCallbackMessage = TRAY_ICON_MESSAGE; // Updated custom message for tray icon events
 
     // Load the icon using LoadIconW directly with IDI_APPLICATION
-    nid.hIcon = LoadIconW(nullptr, reinterpret_cast<LPCWSTR>(IDI_APPLICATION));
+    //nid.hIcon = LoadIconW(nullptr, reinterpret_cast<LPCWSTR>(IDI_APPLICATION));
+    nid.hIcon = reinterpret_cast<HICON>(LoadImageW(nullptr, L"icon.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE));
+
 
     if (nid.hIcon != nullptr) {
         lstrcpyW(nid.szTip, L"onefuncmanager"); // Tooltip for the icon
